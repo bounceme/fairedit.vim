@@ -1,10 +1,10 @@
-function! g:SmartK(...)
+function! g:SmartK()
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"
     let mpos= searchpairpos('\%#','','[''`"/]','nW',
-          \ 'synIDattr(synID(line("."), col(".")+1, 1), "name") =~? "\\vstring|comment|regex"',a:0?0:line('.'))
+          \ 'synIDattr(synID(line("."), col(".")+1, 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   else
     let mpos= searchpairpos('[[({]','','[])}]','nW',
-          \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',a:0?0:line('.'))
+          \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   endif
   if mpos[0]
     return (mpos[1]-col('.'))."dl"
