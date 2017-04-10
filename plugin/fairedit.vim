@@ -1,3 +1,5 @@
+let g:fairedit_last_inserted = ''
+
 function! s:fairEdit(register,...)
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
@@ -14,17 +16,21 @@ function! s:fairEdit(register,...)
     let mpos= searchpairpos('[[({]','','[])}]','nW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   endif
+  let g:fairedit_last_inserted = @.
   if get(l:,'mpos',[0])[0]
     exe "norm! " . get(l:,'premove','').(mpos[1]-col('.')-exists('premove')).'"'.a:register.a:1.'l'
   else
     exe "norm! " . get(l:,'premove','').'"'.a:register.toupper(a:1)
   endif
+  if a:1 == 'c'
+    startinsert|call cursor(0,col('.')+1)
+  endif
 endfunction
 
 nnoremap <silent> <Plug>FairC
       \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairC", v:register)'<Bar>
-      \   call <SID>fairEdit(v:register,'c')<Bar>startinsert<bar>call cursor(0,col('.')+1)<Bar>
-      \   silent! call repeat#set("\<lt>Plug>FairC")<CR>
+      \   call <SID>fairEdit(v:register,'c')<Bar>
+      \   silent! call repeat#set("\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<CR>
 nmap C <Plug>FairC
 
 nnoremap <silent> <Plug>FairD
