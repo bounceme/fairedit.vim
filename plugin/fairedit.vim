@@ -15,7 +15,7 @@ function! s:fairEdit(register,...)
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   endif
   if get(l:,'mpos',[0])[0]
-    exe "norm! " . get(l:,'premove','').(mpos[1]-col('.')+(exists('l:premove') ? -1 : 0)).'"'.a:register.a:1.'l'
+    exe "norm! " . get(l:,'premove','').(mpos[1]-col('.')-exists('premove')).'"'.a:register.a:1.'l'
   else
     exe "norm! " . get(l:,'premove','').'"'.a:register.toupper(a:1)
   endif
@@ -34,9 +34,9 @@ nnoremap <silent> <Plug>FairD
 nmap D <Plug>FairD
 
 if maparg('Y','n') =~# '^y\$$'
-  nnoremap <silent> <Plug>FairY
-        \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairY", v:register)'<Bar>
+  nnoremap <silent> <Plug>FairyEOL
+        \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairyEOL", v:register)'<Bar>
         \   call <SID>fairEdit(v:register,'y')<Bar>
-        \   silent! call repeat#set("\<lt>Plug>FairY")<CR>
-  nmap Y <Plug>FairY
+        \   silent! call repeat#set("\<lt>Plug>FairyEOL")<CR>
+  nmap Y <Plug>FairyEOL
 endif
