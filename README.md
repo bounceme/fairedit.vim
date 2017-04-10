@@ -1,3 +1,3 @@
 # fairedit.vim
 
-A fairly good implementation of some of the paredit.el commands
+An adequate implementation of some of the paredit.el commands
