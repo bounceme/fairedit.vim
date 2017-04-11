@@ -12,7 +12,7 @@ omap $ <Plug>Fairdollar
 "or with the one key variants ex. C,D,Y/y$
 nmap C <Plug>FairC
 nmap D <Plug>FairD
-if maparg('Y','n') =~# '^y\$$'
+if maparg('Y','n') ==# 'y$'
   nmap Y <Plug>FairyEOL
 endif
 ```
