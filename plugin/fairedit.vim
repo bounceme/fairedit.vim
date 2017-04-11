@@ -1,3 +1,7 @@
+if exists('g:fairedit_last_inserted')
+  finish
+endif
+
 let g:fairedit_last_inserted = ''
 
 function! s:fairEdit(register,...)
