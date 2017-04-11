@@ -40,13 +40,13 @@ onoremap <silent> <Plug>Fairdollar
       \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>Fairdollar", v:register)'<Bar>
       \   call <SID>fairEdit(v:register,v:operator)<Bar>
       \   silent! call repeat#set((v:operator ==? 'c' ?
-      \   "\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :
+      \   '"'.v:register."\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :
       \   v:operator."\<lt>Plug>Fairdollar"))<bar>stopinsert<CR>
 
 nnoremap <silent> <Plug>FairC
       \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairC", v:register)'<Bar>
       \   call <SID>fairEdit(v:register,'c')<Bar>
-      \   silent! call repeat#set("\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<CR>
+      \   silent! call repeat#set('"'.v:register."\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<CR>
 
 nnoremap <silent> <Plug>FairD
       \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairD", v:register)'<Bar>
