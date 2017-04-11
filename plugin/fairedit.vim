@@ -7,8 +7,7 @@ let g:fairedit_last_inserted = ''
 function! s:fairEdit(register,...)
   if a:1 =~ '[<>!=]'
     return
-  endif
-  if a:1 == 'c'
+  elseif a:1 == 'c'
     let g:fairedit_last_inserted = @.
   endif
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
