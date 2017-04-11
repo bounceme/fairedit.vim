@@ -12,24 +12,25 @@ function! s:fairEdit(register,...)
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
     let str = 1
     if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
-      let premove = 'l'
-      unlet str
+      return cursor(0,a:1 == 'c' + col('.'))
     else
       let mpos = searchpairpos('\m\%#','','\m[''`"/]','nW',
             \ 'synIDattr(synID(line("."), col(".")+1, 1), "name") =~? "\\vstring|comment|regex"',line('.'))
     endif
+  elseif getline('.')[col('.')-1] =~ '[]})]'
+    return cursor(0,a:1 == 'c' + col('.'))
   endif
   if !exists('str')
-    let mpos= searchpairpos('\m[[({]','','\m[])}]','nW',
+    let mpos= searchpairpos('\m[[({]','','\m[])}]','cnW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   endif
   if a:1 == 'c'
     let g:fairedit_last_inserted = @.
   endif
   if get(l:,'mpos',[0])[0]
-    exe "norm! " . get(l:,'premove','').(mpos[1]-col('.')-exists('premove')).'"'.a:register.a:1.'l'
+    exe "norm! " . (mpos[1]-col('.')).'"'.a:register.a:1.'l'
   else
-    exe "norm! " . get(l:,'premove','').'"'.a:register.a:1.'$'
+    exe "norm! " . '"'.a:register.a:1.'$'
   endif
   if a:1 == 'c'
     startinsert|call cursor(0,col('.')+1)
