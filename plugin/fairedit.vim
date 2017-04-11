@@ -1,7 +1,7 @@
 let g:fairedit_last_inserted = ''
 
 function! s:fairEdit(register,...)
-  if a:1 =~ '[<>]'
+  if a:1 =~ '[<>!=]'
     return
   endif
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
@@ -11,12 +11,12 @@ function! s:fairEdit(register,...)
       let premove = 'l'
       unlet str
     else
-      let mpos = searchpairpos('\%#','','[''`"/]','nW',
+      let mpos = searchpairpos('\m\%#','','\m[''`"/]','nW',
             \ 'synIDattr(synID(line("."), col(".")+1, 1), "name") =~? "\\vstring|comment|regex"',line('.'))
     endif
   endif
   if !exists('str')
-    let mpos= searchpairpos('[[({]','','[])}]','nW',
+    let mpos= searchpairpos('\m[[({]','','\m[])}]','nW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   endif
   if a:1 == 'c'
