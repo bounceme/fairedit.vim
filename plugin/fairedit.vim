@@ -8,24 +8,24 @@ function! s:fairEdit(register,...)
   if a:1 =~ '[<>!=]'
     return
   endif
+  if a:1 == 'c'
+    let g:fairedit_last_inserted = @.
+  endif
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
     let str = 1
     if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
-      return cursor(0,a:1 == 'c' + col('.'))
+      return
     else
       let mpos = searchpairpos('\m\%#','','\m[''`"/]','nW',
             \ 'synIDattr(synID(line("."), col(".")+1, 1), "name") =~? "\\vstring|comment|regex"',line('.'))
     endif
   elseif getline('.')[col('.')-1] =~ '[]})]'
-    return cursor(0,a:1 == 'c' + col('.'))
+    return
   endif
   if !exists('str')
     let mpos= searchpairpos('\m[[({]','','\m[])}]','cnW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
-  endif
-  if a:1 == 'c'
-    let g:fairedit_last_inserted = @.
   endif
   if get(l:,'mpos',[0])[0]
     exe "norm! " . (mpos[1]-col('.')).'"'.a:register.a:1.'l'
