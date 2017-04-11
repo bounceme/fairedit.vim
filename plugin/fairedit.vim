@@ -36,24 +36,24 @@ function! s:fairEdit(register,...)
   endif
 endfunction
 
-onoremap <silent> <Plug>Fairdollar
-      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>Fairdollar", v:register)'<Bar>
+onoremap <silent> <Plug>Fair_dollar
+      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>Fair_dollar", v:register)'<Bar>
       \   call <SID>fairEdit(v:register,v:operator)<Bar>
       \   silent! call repeat#set((v:operator ==? 'c' ?
-      \   '"'.v:register."\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :
-      \   v:operator."\<lt>Plug>Fairdollar"))<bar>stopinsert<CR>
+      \   '"'.v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :
+      \   v:operator."\<lt>Plug>Fair_dollar"))<bar>stopinsert<CR>
 
-nnoremap <silent> <Plug>FairC
-      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairC", v:register)'<Bar>
+nnoremap <silent> <Plug>Fair_C
+      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>Fair_C", v:register)'<Bar>
       \   call <SID>fairEdit(v:register,'c')<Bar>
-      \   silent! call repeat#set('"'.v:register."\<lt>Plug>FairC\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<CR>
+      \   silent! call repeat#set('"'.v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<CR>
 
-nnoremap <silent> <Plug>FairD
-      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairD", v:register)'<Bar>
+nnoremap <silent> <Plug>Fair_D
+      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>Fair_D", v:register)'<Bar>
       \   call <SID>fairEdit(v:register,'d')<Bar>
-      \   silent! call repeat#set("\<lt>Plug>FairD")<CR>
+      \   silent! call repeat#set("\<lt>Plug>Fair_D")<CR>
 
-nnoremap <silent> <Plug>FairyEOL
-      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>FairyEOL", v:register)'<Bar>
+nnoremap <silent> <Plug>Fair_yEOL
+      \   :<C-U>execute 'silent! call repeat#setreg("\<lt>Plug>Fair_yEOL", v:register)'<Bar>
       \   call <SID>fairEdit(v:register,'y')<Bar>
-      \   silent! call repeat#set("\<lt>Plug>FairyEOL")<CR>
+      \   silent! call repeat#set("\<lt>Plug>Fair_yEOL")<CR>
