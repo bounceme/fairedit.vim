@@ -13,7 +13,6 @@ function! s:fairEdit(register,...)
   endif
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
-    let str = 1
     if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
       return
     else
@@ -22,13 +21,14 @@ function! s:fairEdit(register,...)
     endif
   elseif getline('.')[col('.')-1] =~ '[]})]'
     return
-  endif
-  if !exists('str')
+  else
     let mpos= searchpairpos('\m[[({]','','\m[])}]','cnW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
   endif
   if get(l:,'mpos',[0])[0]
     exe "norm! " . (mpos[1]-col('.')).'"'.a:register.a:1.'l'
+  elseif mode() ==# 'no'
+    exe "norm! $"
   else
     exe "norm! " . '"'.a:register.a:1.'$'
   endif
