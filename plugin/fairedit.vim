@@ -6,8 +6,8 @@ let g:fairedit_last_inserted = ''
 let g:prev_rep_reg = ['','']
 
 function! s:fairEdit(register,...)
-  if a:1 =~ '[<>!=]'
-    return
+  if a:1 =~ '[<>!=zq]'
+    return feedkeys('$','n')
   elseif a:1 == 'c'
     let g:fairedit_last_inserted = @.
   endif
