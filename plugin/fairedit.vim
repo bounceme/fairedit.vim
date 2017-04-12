@@ -32,10 +32,8 @@ function! s:fairEdit(register,...)
         let endpos = searchpairpos('\m'.escape(getline('.')[col('.')-1],'['),
               \ '','\m'.tr(getline('.')[col('.')-1],'[({','])}'),'nW',
               \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"')
-        call call('cursor',pos)
-      else
-        call call('cursor',pos)
       endif
+      call call('cursor',pos)
     endif
   endif
   if get(l:,'endpos',[0])[0]
