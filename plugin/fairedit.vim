@@ -26,9 +26,9 @@ function! s:fairEdit(register,...)
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
     if !mpos[0] && len(a:000) == 3
       let pos = getpos('.')[1:2]
-      if getline('.')[col('.')-1] =~ '[[{(]' || cursor(0,col('$')) || searchpairpos('\m[[({]','','\m[])}]','rcbW',
+      if getline('.')[col('.')-1] =~ '[[{(]' || cursor(0,col('$')) || searchpair('\m[[({]','','\m[])}]','rcbW',
             \ 'col(".") <'.pos[1].'||synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',
-            \ line('.'))[0]
+            \ line('.'))
         let endpos = searchpairpos('\m'.escape(getline('.')[col('.')-1],'['),
               \ '','\m'.tr(getline('.')[col('.')-1],'[({','])}'),'nW',
               \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"')
