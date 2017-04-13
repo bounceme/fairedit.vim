@@ -11,6 +11,7 @@ function! s:fairEdit(register,...)
   elseif a:1 == 'c'
     let g:fairedit_last_inserted = @.
   endif
+  let startpos = getpos('.')[1:2]
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
     if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
@@ -46,7 +47,7 @@ function! s:fairEdit(register,...)
     exe "norm! " . '"'.a:register.a:1.'$'
   endif
   if a:1 == 'c'
-    startinsert|call cursor(0,col('.')+1)
+    startinsert|call call('cursor',startpos)
   endif
   return 1
 endfunction
