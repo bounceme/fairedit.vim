@@ -11,7 +11,7 @@ function! s:fairEdit(register,...)
   elseif a:1 == 'c'
     let g:fairedit_last_inserted = @.
   endif
-  let startpos = getpos('.')[1:2]
+  let pos = getpos('.')[1:2]
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
     if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
@@ -26,7 +26,6 @@ function! s:fairEdit(register,...)
     let mpos = searchpairpos('\m[[({]','','\m[])}]','cnW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
     if !mpos[0] && len(a:000) == 3
-      let pos = getpos('.')[1:2]
       if cursor(0,col('$')) || searchpair('\m[[({]','','\m[])}]','rcbW',
             \ 'col(".") <'.pos[1].'||synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',
             \ line('.'))
@@ -47,7 +46,7 @@ function! s:fairEdit(register,...)
     exe "norm! " . '"'.a:register.a:1.'$'
   endif
   if a:1 == 'c'
-    startinsert|call call('cursor',startpos)
+    startinsert|call call('cursor',pos)
   endif
   return 1
 endfunction
