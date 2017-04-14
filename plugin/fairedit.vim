@@ -51,80 +51,27 @@ function! s:fairEdit(register,...)
   return 1
 endfunction
 
-" TODO: map factory
+function! s:mapmaker(type,name,args,repcmd,...)
+  return a:type.'noremap <silent> <Plug>'.a:name.' '
+        \   .':<C-U>let g:prev_rep_reg = deepcopy(get(g:,"repeat_reg",["",""]))<bar>'
+        \   .'execute ''silent! call repeat#setreg("\<lt>Plug>'.a:name.'", v:register)''<Bar>'
+        \   .'if '.matchstr(expand('<sfile>'), '<SNR>\d\+_').'fairEdit(v:register,'.a:args.')<Bar>'
+        \   .'  silent! call repeat#set('.a:repcmd.')<bar>'
+        \   .'else<bar>'
+        \   .'  let g:repeat_reg = g:prev_rep_reg<bar>'
+        \   .'endif'.get(a:000,0,'').'<CR>'
+endfunction
 
-nnoremap <silent> <Plug>Fair_M_D
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_M_D", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,'d',0,1)<Bar>
-      \     silent! call repeat#set("\<lt>Plug>Fair_M_D")<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<CR>
+exe s:mapmaker('n','Fair_M_D',"'d',0,1",'"\<lt>Plug>Fair_M_D"')
+exe s:mapmaker('n','Fair_M_C',"'c',0,1",'"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>"')
+exe s:mapmaker('n','Fair_M_yEOL',"'y',0,1",'"\<lt>Plug>Fair_M_yEOL"')
+exe s:mapmaker('o','Fair_M_dollar',"v:operator,1,1",'(v:operator ==? "c" ?'.
+      \       '"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
+      \       'v:operator."\<lt>Plug>Fair_M_dollar")','<bar>stopinsert')
 
-nnoremap <silent> <Plug>Fair_M_C
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_M_C", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,'c',0,1)<Bar>
-      \     silent! call repeat#set('"'.v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<CR>
-
-nnoremap <silent> <Plug>Fair_M_yEOL
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_M_yEOL", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,'y',0,1)<Bar>
-      \     silent! call repeat#set("\<lt>Plug>Fair_M_yEOL")<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<CR>
-
-onoremap <silent> <Plug>Fair_M_dollar
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_M_dollar", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,v:operator,1,1)<Bar>
-      \     silent! call repeat#set((v:operator ==? 'c' ?
-      \       '"'.v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :
-      \       v:operator."\<lt>Plug>Fair_M_dollar"))<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<bar>stopinsert<CR>
-
-onoremap <silent> <Plug>Fair_dollar
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_dollar", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,v:operator,1)<Bar>
-      \     silent! call repeat#set((v:operator ==? 'c' ?
-      \       '"'.v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :
-      \       v:operator."\<lt>Plug>Fair_dollar"))<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<bar>stopinsert<CR>
-
-nnoremap <silent> <Plug>Fair_C
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_C", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,'c')<Bar>
-      \     silent! call repeat#set('"'.v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>")<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<CR>
-
-nnoremap <silent> <Plug>Fair_D
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_D", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,'d')<Bar>
-      \     silent! call repeat#set("\<lt>Plug>Fair_D")<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<CR>
-
-nnoremap <silent> <Plug>Fair_yEOL
-      \   :<C-U>let prev_rep_reg = deepcopy(get(g:,'repeat_reg',['','']))<bar>
-      \   execute 'silent! call repeat#setreg("\<lt>Plug>Fair_yEOL", v:register)'<Bar>
-      \   if <SID>fairEdit(v:register,'y')<Bar>
-      \     silent! call repeat#set("\<lt>Plug>Fair_yEOL")<bar>
-      \   else<bar>
-      \     let g:repeat_reg = prev_rep_reg<bar>
-      \   endif<CR>
+exe s:mapmaker('n','Fair_D',"'d',0",'"\<lt>Plug>Fair_D"')
+exe s:mapmaker('n','Fair_C',"'c',0",'"\"".v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>"')
+exe s:mapmaker('n','Fair_yEOL',"'y',0",'"\<lt>Plug>Fair_yEOL"')
+exe s:mapmaker('o','Fair_dollar',"v:operator,1",'(v:operator ==? "c" ?'.
+      \       '"\"".v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
+      \       'v:operator."\<lt>Plug>Fair_dollar")','<bar>stopinsert')
