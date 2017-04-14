@@ -54,7 +54,7 @@ endfunction
 function! s:mapmaker(type,name,args,repcmd,...)
   return a:type.'noremap <silent> <Plug>'.a:name.' '
         \   .':<C-U>let g:prev_rep_reg = deepcopy(get(g:,"repeat_reg",["",""]))<bar>'
-        \   .'execute ''silent! call repeat#setreg("\<lt>Plug>'.a:name.'", v:register)''<Bar>'
+        \   .'silent! call repeat#setreg("\<lt>Plug>'.a:name.'", v:register)<Bar>'
         \   .'if <SID>fairEdit(v:register,'.a:args.')<Bar>'
         \   .'  silent! call repeat#set('.a:repcmd.')<bar>'
         \   .'else<bar>'
