@@ -37,9 +37,9 @@ function! s:fairEdit(register,...)
     endif
   endif
   if get(l:,'endpos',[0])[0]
-    exe "norm! ".'"'.a:register.a:1.'v'.(line2byte(endpos[0]) + endpos[1]-1).'go'
+    exe "norm! \"".a:register.a:1.'v'.(line2byte(endpos[0]) + endpos[1]-1).'go'
   elseif get(l:,'mpos',[0])[0]
-    exe "norm! " . (mpos[1]-col('.')).'"'.a:register.a:1.'l'
+    exe "norm! \"".a:register.a:1.(mpos[1]-col('.')).'l'
   elseif len(a:000) >= 2 && a:2
     exe "norm! <lt>esc>\"".a:register.a:1.'$'
   else
