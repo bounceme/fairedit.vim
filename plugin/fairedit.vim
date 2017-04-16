@@ -36,6 +36,10 @@ function! s:fairEdit(register,...)
       call call('cursor',pos)
     endif
   endif
+  if a:1 == 'c' && !search('\m\S','bnW',line('.'))
+    call search('\m\S','Wc',line('.'))
+    let pos = getpos('.')[1:2]
+  endif
   if get(l:,'endpos',[0])[0]
     exe "norm! \"".a:register.a:1.'v'.(line2byte(endpos[0]) + endpos[1]-1).'go'
   elseif get(l:,'mpos',[0])[0]
