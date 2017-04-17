@@ -59,7 +59,9 @@ function! s:mapmaker(type,name,args,repcmd,...)
         \   .'if <SID>fairEdit(v:register,'.a:args.')<Bar>'
         \   .'  silent! call repeat#set('.a:repcmd.',-1)<bar>'
         \   .'else<bar>'
-        \   .'  let g:repeat_reg = g:prev_rep_reg<bar>silent! call repeat#invalidate()<bar>'
+        \   .'  let g:repeat_reg = g:prev_rep_reg<bar>'
+        \   .'  silent! call repeat#invalidate()<bar>'
+        \   .'  let g:repeat_sequence = ""<bar>'
         \   .'endif'.get(a:000,0,'').'<CR>'
 endfunction
 
@@ -67,7 +69,7 @@ exe s:mapmaker('n','Fair_M_D',"'d',0,1",'"\<lt>Plug>Fair_M_D"')
 exe s:mapmaker('n','Fair_M_C',"'c',0,1",'"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>"')
 exe s:mapmaker('n','Fair_M_yEOL',"'y',0,1",'"\<lt>Plug>Fair_M_yEOL"')
 exe s:mapmaker('o','Fair_M_dollar',"v:operator,1,1",'(v:operator ==? "c" ?'.
-      \       '"\<lt>esc>\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
+      \       '"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
       \       'v:operator."\<lt>Plug>Fair_M_dollar")','<bar>stopinsert')
 
 exe s:mapmaker('n','Fair_D',"'d',0",'"\<lt>Plug>Fair_D"')
