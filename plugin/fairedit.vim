@@ -36,17 +36,13 @@ function! s:fairEdit(register,...)
       call call('cursor',pos)
     endif
   endif
+  let act = get(a:000,1) ? '' : a:1
   if get(l:,'endpos',[0])[0]
-    exe "norm! \"".a:register.a:1.'v'.(line2byte(endpos[0]) + endpos[1]-1).'go'
+    call feedkeys(act . 'v' . (line2byte(endpos[0]) + endpos[1]-1) . 'go','n')
   elseif get(l:,'mpos',[0])[0]
-    exe "norm! \"".a:register.a:1.(mpos[1]-col('.')).'l'
-  elseif len(a:000) >= 2 && a:2
-    exe "norm! <lt>esc>\"".a:register.a:1.'$'
+    call feedkeys(act . (mpos[1]-col(' . ')) . 'l','n')
   else
-    exe "norm! " . '"'.a:register.a:1.'$'
-  endif
-  if a:1 == 'c'
-    startinsert|call call('cursor',pos)
+    call feedkeys(act . '$','n')
   endif
   return 1
 endfunction
@@ -59,7 +55,7 @@ function! s:mapmaker(type,name,args,repcmd,...)
         \   .'  silent! call repeat#set('.a:repcmd.')<bar>'
         \   .'else<bar>'
         \   .'  let g:repeat_reg = g:prev_rep_reg<bar>'
-        \   .'endif'.get(a:000,0,'').'<CR>'
+        \   .'endif<CR>'
 endfunction
 
 exe s:mapmaker('n','Fair_M_D',"'d',0,1",'"\<lt>Plug>Fair_M_D"')
@@ -67,11 +63,11 @@ exe s:mapmaker('n','Fair_M_C',"'c',0,1",'"\"".v:register."\<lt>Plug>Fair_M_C\<lt
 exe s:mapmaker('n','Fair_M_yEOL',"'y',0,1",'"\<lt>Plug>Fair_M_yEOL"')
 exe s:mapmaker('o','Fair_M_dollar',"v:operator,1,1",'(v:operator ==? "c" ?'.
       \       '"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
-      \       'v:operator."\<lt>Plug>Fair_M_dollar")','<bar>stopinsert')
+      \       'v:operator."\<lt>Plug>Fair_M_dollar")')
 
 exe s:mapmaker('n','Fair_D',"'d',0",'"\<lt>Plug>Fair_D"')
 exe s:mapmaker('n','Fair_C',"'c',0",'"\"".v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>"')
 exe s:mapmaker('n','Fair_yEOL',"'y',0",'"\<lt>Plug>Fair_yEOL"')
 exe s:mapmaker('o','Fair_dollar',"v:operator,1",'(v:operator ==? "c" ?'.
       \       '"\"".v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
-      \       'v:operator."\<lt>Plug>Fair_dollar")','<bar>stopinsert')
+      \       'v:operator."\<lt>Plug>Fair_dollar")')
