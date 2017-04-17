@@ -41,7 +41,7 @@ function! s:fairEdit(register,...)
   elseif get(l:,'mpos',[0])[0]
     exe "norm! \"".a:register.a:1.(mpos[1]-col('.')).'l'
   elseif len(a:000) >= 2 && a:2
-    exe ':<C-U>call feedkeys("\<esc>","xn")<cr>'
+    call feedkeys("\<esc>",'x')
     call feedkeys('$','tn')
   else
     exe "norm! \"".a:register.a:1.'$'
