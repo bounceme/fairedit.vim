@@ -40,7 +40,7 @@ function! s:fairEdit(register,...)
   if get(l:,'endpos',[0])[0]
     call feedkeys(act . 'v' . (line2byte(endpos[0]) + endpos[1]-1) . 'go','n')
   elseif get(l:,'mpos',[0])[0]
-    call feedkeys(act . (mpos[1]-col(' . ')) . 'l','n')
+    call feedkeys(act . (mpos[1]-col('.')) . 'l','n')
   else
     call feedkeys(act . '$','n')
   endif
@@ -52,7 +52,7 @@ function! s:mapmaker(type,name,args,repcmd,...)
         \   .':<C-U>let g:prev_rep_reg = deepcopy(get(g:,"repeat_reg",["",""]))<bar>'
         \   .'silent! call repeat#setreg("\<lt>Plug>'.a:name.'", v:register)<Bar>'
         \   .'if <SID>fairEdit(v:register,'.a:args.')<Bar>'
-        \   .'  silent! call repeat#set('.a:repcmd.')<bar>'
+        \   .'  silent! call repeat#set('.a:repcmd.')<bar>call feedkeys("","x")<bar>'
         \   .'else<bar>'
         \   .'  let g:repeat_reg = g:prev_rep_reg<bar>'
         \   .'endif<CR>'
