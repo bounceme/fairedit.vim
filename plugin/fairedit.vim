@@ -5,7 +5,7 @@ endif
 let g:fairedit_last_inserted = ''
 let g:prev_rep_reg = ['','']
 
-function! s:fairEdit()
+function! s:fairEdit(...)
   let pos = getpos('.')[1:2]
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
@@ -22,7 +22,7 @@ function! s:fairEdit()
     let mpos = searchpairpos('\m[[({]','','\m[])}]','cnW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
     let mpos[1] -= 1
-    if !mpos[0]
+    if !mpos[0] && a:1
       if cursor(0,col('$')) || searchpair('\m[[({]','','\m[])}]','rcbW',
             \ 'col(".") <'.pos[1].'||synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',
             \ line('.'))
@@ -37,17 +37,28 @@ function! s:fairEdit()
 endfunction
 
 function! s:movement(...) abort
-  let [lclose, cclose] = s:fairEdit()
+  let [arg1, arg2] = [get(a:000,1),get(a:000,2)]
+  if v:count
+    let lclose = 0
+  else
+    let [lclose, cclose] = s:fairEdit(arg2)
+  endif
   if lclose
     call setpos("'[", [0, line('.'), col('.'), 0])
     call setpos("']", [0, lclose, cclose, 0])
-    return "v`[o`]".a:1
+    return (arg1? "\<esc>" : '')."v`[o`]\"".v:register.a:1
   else
-    return (get(a:000,1)? '':a:1) .'$'
+    return (arg1 ? '' : v:count1.'"'.v:register.a:1) .'$'
   endif
 endfunction
 
-nnoremap <expr><PLUG>Fair_M_D <SID>movement('d')
-nnoremap <expr><PLUG>Fair_M_C <SID>movement('c')
-nnoremap <expr><PLUG>Fair_M_Y <SID>movement('y')
-onoremap <expr><PLUG>Fair_M_dollar "\<esc>".<SID>movement(v:operator,1)
+
+nnoremap <expr><PLUG>Fair_D <SID>movement('d',0)
+nnoremap <expr><PLUG>Fair_C <SID>movement('c',0)
+nnoremap <expr><PLUG>Fair_yEOL <SID>movement('y',0)
+onoremap <expr><PLUG>Fair_dollar <SID>movement(v:operator,1)
+
+nnoremap <expr><PLUG>Fair_M_D <SID>movement('d',0,1)
+nnoremap <expr><PLUG>Fair_M_C <SID>movement('c',0,1)
+nnoremap <expr><PLUG>Fair_M_yEOL <SID>movement('y',0,1)
+onoremap <expr><PLUG>Fair_M_dollar <SID>movement(v:operator,1,1)
