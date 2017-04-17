@@ -41,9 +41,10 @@ function! s:fairEdit(register,...)
   elseif get(l:,'mpos',[0])[0]
     exe "norm! \"".a:register.a:1.(mpos[1]-col('.')).'l'
   elseif len(a:000) >= 2 && a:2
-    exe "norm! <lt>esc>\"".a:register.a:1.'$'
+    exe ':<C-U>call feedkeys("\<esc>","xn")<cr>'
+    call feedkeys('$','tn')
   else
-    exe "norm! " . '"'.a:register.a:1.'$'
+    exe "norm! \"".a:register.a:1.'$'
   endif
   if a:1 == 'c'
     startinsert|call call('cursor',pos)
