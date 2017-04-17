@@ -5,76 +5,60 @@ endif
 let g:fairedit_last_inserted = ''
 let g:prev_rep_reg = ['','']
 
-function! s:fairEdit(register,...)
-  if a:1 =~ '[<>!=zq]'
-    return feedkeys('$','n')
-  elseif a:1 == 'c'
-    let g:fairedit_last_inserted = @.
-  endif
+function! s:fairEdit(...)
   let pos = getpos('.')[1:2]
   if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
         \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
     if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
-      return
+    return [0,0]
     else
       let mpos = searchpairpos('\m\%#','','\m[''`"/]','nW',
             \ 'synIDattr(synID(line("."), col(".")+1, 1), "name") =~? "\\vstring|comment|regex"',line('.'))
+      let mpos[1] -= 1
     endif
   elseif getline('.')[col('.')-1] =~ '[]})]'
-    return
+    return [0,0]
   else
     let mpos = searchpairpos('\m[[({]','','\m[])}]','cnW',
           \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',line('.'))
-    if !mpos[0] && len(a:000) == 3
+    let mpos[1] -= 1
+    if !mpos[0] && a:1
       if cursor(0,col('$')) || searchpair('\m[[({]','','\m[])}]','rcbW',
             \ 'col(".") <'.pos[1].'||synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"',
             \ line('.'))
-        let endpos = searchpairpos('\m'.escape(getline('.')[col('.')-1],'['),
+        let mpos = searchpairpos('\m'.escape(getline('.')[col('.')-1],'['),
               \ '','\m'.tr(getline('.')[col('.')-1],'[({','])}'),'nW',
               \ 'synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex"')
       endif
       call call('cursor',pos)
     endif
   endif
-  if get(l:,'endpos',[0])[0]
-    exe "norm! \"".a:register.a:1.'v'.(line2byte(endpos[0]) + endpos[1]-1).'go'
-  elseif get(l:,'mpos',[0])[0]
-    exe "norm! \"".a:register.a:1.(mpos[1]-col('.')).'l'
-  elseif len(a:000) >= 2 && a:2
-    call feedkeys("\<esc>",'xn')
-    call feedkeys('$','tn')
+  return mpos
+endfunction
+
+function! s:movement(...) abort
+  let [arg1, arg2] = [get(a:000,1),get(a:000,2)]
+  if v:count
+    let lclose = 0
   else
-    exe "norm! \"".a:register.a:1.'$'
+    let [lclose, cclose] = s:fairEdit(arg2)
   endif
-  if a:1 == 'c'
-    startinsert|call call('cursor',pos)
+  if lclose
+    call setpos("'[", [0, line('.'), col('.'), 0])
+    call setpos("']", [0, lclose, cclose, 0])
+    return (arg1? "\<esc>" : '')."v`[o`]\"".v:register.a:1
+  else
+    return (arg1 ? '' : v:count1.'"'.v:register.a:1) .'$'
   endif
-  return 1
 endfunction
 
-function! s:mapmaker(type,name,args,repcmd,...)
-  return a:type.'noremap <silent> <Plug>'.a:name.' '
-        \   .':<C-U>let g:prev_rep_reg = deepcopy(get(g:,"repeat_reg",["",""]))<bar>'
-        \   .'silent! call repeat#setreg("\<lt>Plug>'.a:name.'", v:register)<Bar>'
-        \   .'if <SID>fairEdit(v:register,'.a:args.')<Bar>'
-        \   .'  silent! call repeat#set('.a:repcmd.',-1)<bar>'
-        \   .'else<bar>'
-        \   .'  let g:repeat_reg = g:prev_rep_reg<bar>'
-        \   .'  silent! call repeat#invalidate()<bar>'
-        \   .'  let g:repeat_sequence = ""<bar>'
-        \   .'endif'.get(a:000,0,'').'<CR>'
-endfunction
 
-exe s:mapmaker('n','Fair_M_D',"'d',0,1",'"\<lt>Plug>Fair_M_D"')
-exe s:mapmaker('n','Fair_M_C',"'c',0,1",'"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>"')
-exe s:mapmaker('n','Fair_M_yEOL',"'y',0,1",'"\<lt>Plug>Fair_M_yEOL"')
-exe s:mapmaker('o','Fair_M_dollar',"v:operator,1,1",'(v:operator ==? "c" ?'.
-      \       '"\"".v:register."\<lt>Plug>Fair_M_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
-      \       'v:operator."\<lt>Plug>Fair_M_dollar")','<bar>stopinsert')
+nnoremap <expr><PLUG>Fair_D <SID>movement('d',0)
+nnoremap <expr><PLUG>Fair_C <SID>movement('c',0)
+nnoremap <expr><PLUG>Fair_yEOL <SID>movement('y',0)
+onoremap <expr><PLUG>Fair_dollar <SID>movement(v:operator,1)
 
-exe s:mapmaker('n','Fair_D',"'d',0",'"\<lt>Plug>Fair_D"')
-exe s:mapmaker('n','Fair_C',"'c',0",'"\"".v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>"')
-exe s:mapmaker('n','Fair_yEOL',"'y',0",'"\<lt>Plug>Fair_yEOL"')
-exe s:mapmaker('o','Fair_dollar',"v:operator,1",'(v:operator ==? "c" ?'.
-      \       '"\"".v:register."\<lt>Plug>Fair_C\<lt>C-r>=fairedit_last_inserted\<lt>CR>\<lt>esc>" :'.
-      \       'v:operator."\<lt>Plug>Fair_dollar")','<bar>stopinsert')
+nnoremap <expr><PLUG>Fair_M_D <SID>movement('d',0,1)
+nnoremap <expr><PLUG>Fair_M_C <SID>movement('c',0,1)
+nnoremap <expr><PLUG>Fair_M_yEOL <SID>movement('y',0,1)
+onoremap <expr><PLUG>Fair_M_dollar <SID>movement(v:operator,1,1)
