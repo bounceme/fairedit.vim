@@ -8,7 +8,7 @@ let g:prev_rep_reg = ['','']
 function! s:fairEdit(register,...)
   if a:1 == 'c' && get(a:000,1)
     call feedkeys('','x')
-    call feedkeys("\<C-C>","n")
+    call feedkeys("\<esc>","n")
   endif
   if a:1 =~ '[<>!=zq]'
     return feedkeys('$','n')
