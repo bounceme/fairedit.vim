@@ -54,7 +54,7 @@ function! s:fairEdit(register,...)
     if !get(a:000,1)
       call feedkeys('','x')
     else
-      call feedkeys('a','n')
+      call feedkeys('i','n')
     endif
     startinsert|call call('cursor',pos)
   endif
@@ -63,7 +63,7 @@ endfunction
 
 function! s:mapmaker(type,name,args,repcmd,...)
   return a:type.'noremap <silent> <Plug>'.a:name.' '
-        \   .':<C-U>call feedkeys("\<lt>C-C>","n")<bar>let g:prev_rep_reg = deepcopy(get(g:,"repeat_reg",["",""]))<bar>'
+        \   .':<C-U>call feedkeys("\<lt>esc>","n")<bar>let g:prev_rep_reg = deepcopy(get(g:,"repeat_reg",["",""]))<bar>'
         \   .'silent! call repeat#setreg("\<lt>Plug>'.a:name.'", v:register)<Bar>'
         \   .'if <SID>fairEdit(v:register,'.a:args.')<Bar>'
         \   .'  silent! call repeat#set('.a:repcmd.')<bar>'
