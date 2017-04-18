@@ -53,7 +53,7 @@ function! s:movement(...) abort
   endif
   let rephack = a:1 == 'c' ? "\<c-r>=" : ':silent! call '
   let rephackend = a:1 == 'c' ? "\<BS>" : ''
-  call feedkeys(rephack."repeat#set(\"". key_seq . "\",".(arg3 ? arg3 : -1).")\<cr>".rephackend,'n')
+  call feedkeys(rephack."repeat#set(\"". key_seq . "\",".arg3.")\<cr>".rephackend,'n')
 endfunction
 
 nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
