@@ -47,13 +47,13 @@ function! s:movement(...) abort
   if lclose
     call setpos("'[", [0, line('.'), col('.'), 0])
     call setpos("']", [0, lclose, cclose, 0])
-    call feedkeys("v`[o`]\"".v:register.a:1,'tn')
+    call feedkeys('v`[o`]"'.v:register.a:1,'tn')
   else
     call feedkeys((arg3 ? arg3 : 1).'"'.v:register.a:1 .'$','tn')
   endif
   let rephack = a:1 == 'c' ? "\<c-r>=" : ':silent! call '
   let rephackend = a:1 == 'c' ? "\<BS>" : ''
-  call feedkeys(rephack."repeat#set(\"". key_seq . "\",".arg3.")\<cr>".rephackend,'n')
+  call feedkeys(rephack.'repeat#set("'. key_seq . '",'.arg3.")\<cr>".rephackend,'n')
 endfunction
 
 nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
