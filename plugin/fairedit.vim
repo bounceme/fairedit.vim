@@ -52,12 +52,12 @@ function! s:movement(...) abort
   endif
 endfunction
 
-nnoremap <PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
-nnoremap <PLUG>Fair_C :<C-U>call <SID>movement('c',0,0,v:count)<CR>
-nnoremap <PLUG>Fair_yEOL :<C-U>call <SID>movement('y',0,0,v:count)<CR>
-onoremap <PLUG>Fair_dollar <esc>:<C-U>call <SID>movement(v:operator,1,0,v:prevcount)<CR>
+nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
+nnoremap <silent><PLUG>Fair_C :<C-U>call <SID>movement('c',0,0,v:count)<CR>
+nnoremap <silent><PLUG>Fair_yEOL :<C-U>call <SID>movement('y',0,0,v:count)<CR>
+onoremap <silent><PLUG>Fair_dollar <esc>:<C-U>call <SID>movement(v:operator,1,0,v:prevcount)<CR>
 
-nnoremap <PLUG>Fair_M_D :<C-U>call <SID>movement('d',0,1,v:count)<CR>
-nnoremap <PLUG>Fair_M_C :<C-U>call <SID>movement('c',0,1,v:count)<CR>
-nnoremap <PLUG>Fair_M_yEOL :<C-U>call <SID>movement('y',0,1,v:count)<CR>
-onoremap <PLUG>Fair_M_dollar <esc>:<C-U>call <SID>movement(v:operator,1,1,v:prevcount)<CR>
+nnoremap <silent><PLUG>Fair_M_D :<C-U>call <SID>movement('d',0,1,v:count)<CR>
+nnoremap <silent><PLUG>Fair_M_C :<C-U>call <SID>movement('c',0,1,v:count)<CR>
+nnoremap <silent><PLUG>Fair_M_yEOL :<C-U>call <SID>movement('y',0,1,v:count)<CR>
+onoremap <silent><PLUG>Fair_M_dollar <esc>:<C-U>call <SID>movement(v:operator,1,1,v:prevcount)<CR>
