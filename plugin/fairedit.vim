@@ -52,9 +52,10 @@ function! s:movement(...) abort
   else
     call feedkeys((arg3 ? arg3 : 1).'"'.v:register.a:1 .'$','tn')
   endif
-  let rephack = a:1 == 'c' ? "\<c-r>=" : ':silent! call '
+  let rephack = a:1 == 'c' ? "\<c-r>=" : '@=matchstr("",'
+  let expr_nul = a:1 == 'c' ? '' : ')'
   let rephackend = a:1 == 'c' ? "\<BS>" : ''
-  call feedkeys(rephack.'repeat#set("'. key_seq . '",'.arg3.")\<cr>".rephackend,'n')
+  call feedkeys(rephack.'repeat#set("'. key_seq . '",'.arg3.expr_nul.")\<cr>".rephackend,'n')
 endfunction
 
 nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
