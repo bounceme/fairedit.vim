@@ -1,8 +1,7 @@
-if exists('g:fairedit_last_inserted')
+if exists('g:loaded_fairedit')
   finish
 endif
-
-let g:prev_rep_reg = ['','']
+let g:loaded_fairedit = 1
 
 augroup FaEd
   au!
