@@ -37,8 +37,9 @@ function! s:fairEdit(...)
 endfunction
 
 function! s:movement(...) abort
-  let [arg1, arg2] = [get(a:000,1),get(a:000,2)]
-  if v:count
+  let [arg1, arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
+  let key_seq = "\\<PLUG>Fair_".(arg2 ? 'M_' : '').substitute(substitute(a:1,'y','&EOL',''),'^.$',"\\=toupper(submatch(0))",'')
+  if arg3
     let lclose = 0
   else
     let [lclose, cclose] = s:fairEdit(arg2)
@@ -46,19 +47,21 @@ function! s:movement(...) abort
   if lclose
     call setpos("'[", [0, line('.'), col('.'), 0])
     call setpos("']", [0, lclose, cclose, 0])
-    return (arg1? "\<esc>" : '')."v`[o`]\"".v:register.a:1
+    call feedkeys("v`[o`]\"".v:register.a:1,'tn')
   else
-    return (arg1 ? '' : v:count1.'"'.v:register.a:1) .'$'
+    call feedkeys((arg3 ? arg3 : 1).'"'.v:register.a:1 .'$','tn')
   endif
+  let rephack = a:1 == 'c' ? "\<c-r>=" : ':silent! call '
+  let rephackend = a:1 == 'c' ? "\<BS>" : ''
+  call feedkeys(rephack."repeat#set(\"". key_seq . "\",-1)\<cr>".rephackend,'n')
 endfunction
 
+nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
+nnoremap <silent><PLUG>Fair_C :<C-U>call <SID>movement('c',0,0,v:count)<CR>
+nnoremap <silent><PLUG>Fair_yEOL :<C-U>call <SID>movement('y',0,0,v:count)<CR>
+onoremap <silent><PLUG>Fair_dollar <esc>:<C-U>call <SID>movement(v:operator,1,0,v:prevcount)<CR>
 
-nnoremap <expr><PLUG>Fair_D <SID>movement('d',0)
-nnoremap <expr><PLUG>Fair_C <SID>movement('c',0)
-nnoremap <expr><PLUG>Fair_yEOL <SID>movement('y',0)
-onoremap <expr><PLUG>Fair_dollar <SID>movement(v:operator,1)
-
-nnoremap <expr><PLUG>Fair_M_D <SID>movement('d',0,1)
-nnoremap <expr><PLUG>Fair_M_C <SID>movement('c',0,1)
-nnoremap <expr><PLUG>Fair_M_yEOL <SID>movement('y',0,1)
-onoremap <expr><PLUG>Fair_M_dollar <SID>movement(v:operator,1,1)
+nnoremap <silent><PLUG>Fair_M_D :<C-U>call <SID>movement('d',0,1,v:count)<CR>
+nnoremap <silent><PLUG>Fair_M_C :<C-U>call <SID>movement('c',0,1,v:count)<CR>
+nnoremap <silent><PLUG>Fair_M_yEOL :<C-U>call <SID>movement('y',0,1,v:count)<CR>
+onoremap <silent><PLUG>Fair_M_dollar <esc>:<C-U>call <SID>movement(v:operator,1,1,v:prevcount)<CR>
