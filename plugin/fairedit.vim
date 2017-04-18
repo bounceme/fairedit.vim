@@ -51,7 +51,7 @@ function! s:movement(...) abort
   else
     call feedkeys((arg3 ? arg3 : 1).'"'.v:register.a:1 .'$','tn')
   endif
-  let rephack = a:1 == 'c' ? '=' : ':silent! call '
+  let rephack = a:1 == 'c' ? "\<c-r>=" : ':silent! call '
   let rephackend = a:1 == 'c' ? "\<BS>" : ''
   call feedkeys(rephack."repeat#set(\"". key_seq . "\",-1)\<cr>".rephackend,'n')
 endfunction
