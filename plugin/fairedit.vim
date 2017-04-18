@@ -38,6 +38,7 @@ endfunction
 
 function! s:movement(...) abort
   let [arg1, arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
+  let key_seq = "\\<PLUG>Fair_".(arg2 ? 'M_' : '').substitute(substitute(a:1,'y','&EOL',''),'^.$',"\\=toupper(submatch(0))",'')
   if arg3
     let lclose = 0
   else
@@ -50,6 +51,9 @@ function! s:movement(...) abort
   else
     call feedkeys((arg3 ? arg3 : 1).'"'.v:register.a:1 .'$','tn')
   endif
+  let rephack = a:1 == 'c' ? '=' : ':silent! call '
+  let rephackend = a:1 == 'c' ? "\<BS>" : ''
+  call feedkeys(rephack."repeat#set(\"". key_seq . "\",-1)\<cr>".rephackend,'n')
 endfunction
 
 nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
