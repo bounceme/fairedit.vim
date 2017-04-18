@@ -2,7 +2,6 @@ if exists('g:fairedit_last_inserted')
   finish
 endif
 
-let g:fairedit_last_inserted = ''
 let g:prev_rep_reg = ['','']
 
 augroup FaEd
@@ -41,13 +40,13 @@ function! s:fairEdit(...)
 endfunction
 
 function! s:movement(...) abort
-  let [arg1, arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
-  let key_seq = (arg1 ? a:1 : '')."\\<PLUG>Fair_".(arg2 ? 'M_' : '')
+  let [arg1, s:arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
+  let key_seq = (arg1 ? a:1 : '')."\\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
         \ .(arg1 ? 'dollar' : substitute(substitute(a:1,'y','&EOL',''),'^.$','\U&',''))
   if arg3 > 1
     let lclose = 0
   else
-    let [lclose, cclose] = s:fairEdit(arg2)
+    let [lclose, cclose] = s:fairEdit(s:arg2)
   endif
   if lclose
     let inner_seq = a:1 ==# 'Nop' ? '"_d".P' : ('"'.v:register.a:1)
@@ -59,7 +58,7 @@ function! s:movement(...) abort
     call feedkeys((arg3 ? arg3 : 1).inner_seq,'tn')
   endif
   if a:1 == 'c'
-    au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(arg2 ? 'M_' : '')."Nop") | au! FaEd *
+    au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
   else
     let rephack = '@=matchstr("",'
     let expr_nul = ')'
