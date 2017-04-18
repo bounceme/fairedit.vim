@@ -59,7 +59,7 @@ function! s:movement(...) abort
     call feedkeys((arg3 ? arg3 : 1).inner_seq,'tn')
   endif
   if a:1 == 'c'
-    au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_M_Nop") | au! FaEd *
+    au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(arg2 ? 'M_' : '')."Nop") | au! FaEd *
   else
     let rephack = '@=matchstr("",'
     let expr_nul = ')'
