@@ -40,7 +40,7 @@ endfunction
 
 function! s:movement(...) abort
   let [arg1, s:arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
-  let key_seq = (arg1 ? a:1 : '')."\\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
+  let key_seq = (arg1 ? a:1 : '')."\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
         \ .(arg1 ? 'dollar' : substitute(substitute(a:1,'y','&EOL',''),'^.$','\U&',''))
   if arg3 > 1
     let lclose = 0
@@ -59,9 +59,8 @@ function! s:movement(...) abort
   if a:1 == 'c'
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
   else
-    let rephack = '@=matchstr("",'
-    let expr_nul = ')'
-    call feedkeys(rephack.'repeat#set("'. key_seq . '",'.arg3.expr_nul.")\<cr>\<c-l>",'n')
+    call feedkeys('','x')
+    silent! call repeat#set(key_seq,arg3)
   endif
 endfunction
 
