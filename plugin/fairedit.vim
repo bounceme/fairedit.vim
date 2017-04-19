@@ -61,7 +61,7 @@ function! s:movement(...) abort
   else
     let rephack = '@=matchstr("",'
     let expr_nul = ')'
-    call feedkeys(rephack.'repeat#set("'. key_seq . '",'.arg3.expr_nul.")\<cr>",'n')
+    call feedkeys(rephack.'repeat#set("'. key_seq . '",'.arg3.expr_nul.")\<cr>\<c-l>",'n')
   endif
 endfunction
 
