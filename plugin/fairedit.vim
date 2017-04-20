@@ -49,7 +49,9 @@ function! s:movement(...) abort
   endif
   if lclose
     let inner_seq = a:1 ==# 'Nop' ? '"_d".P' : ('"'.v:register.a:1)
-    call setpos("'[", [0, line('.'), col('.'), 0])
+    let cpos = searchpos('^\s*\%#\s*\zs\S','cnW',line('.'))
+    let cpos = (cpos[0] ? cpos : getpos('.')[1:2]) + [0]
+    call setpos("'[", [0] + cpos)
     call setpos("']", [0, lclose, cclose, 0])
     call feedkeys('v`[o`]'.inner_seq,'tn')
   else
