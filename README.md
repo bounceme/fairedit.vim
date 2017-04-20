@@ -17,7 +17,9 @@ if maparg('Y','n') ==# 'y$'
 endif
 
 " experimental: multiline ast balancing!
+" hint: try >$ , =$ , <$ , or any plugin that defines the g@ operator
 omap $ <Plug>Fair_M_dollar
+
 nmap C <Plug>Fair_M_C
 nmap D <Plug>Fair_M_D
 if maparg('Y','n') ==# 'y$'
