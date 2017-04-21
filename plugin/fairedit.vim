@@ -9,9 +9,9 @@ augroup END
 
 function! s:fairEdit(...)
   let pos = getpos('.')[1:2]
-  if synIDattr(synID(line("."), col("."), 1), "name") =~? "\\vstring|comment|regex" &&
-        \ synIDattr(synID(line("."), col(".")-1, 1), "name") =~? "\\vstring|comment|regex"
-    if synIDattr(synID(line("."), col(".")+1, 1), "name") !~? "\\vstring|comment|regex"
+  if synIDattr(synID(line('.'), col('.'), 1), 'name') =~? '\vstring|comment|regex' &&
+        \ synIDattr(synID(line('.'), col('.')-1, 1), 'name') =~? '\vstring|comment|regex'
+    if synIDattr(synID(line('.'), col('.')+1, 1), 'name') !~? '\vstring|comment|regex'
       return [0,0]
     else
       let mpos = searchpairpos('\m\%#','','\m[''`"/]','nW',
@@ -47,7 +47,8 @@ function! s:movement(...) abort
   else
     let [lclose, cclose] = s:fairEdit(s:arg2)
   endif
-  if a:1 ==? 'c'
+  if a:1 =~# '^\%(c\|Nop\)$' &&
+        \ synIDattr(synID(line('.'), 1, 1), 'name') !~? '\vstring|comment|regex'
     call search('^\s*\zs\S','cW',line('.'))
   endif
   if lclose
@@ -59,7 +60,7 @@ function! s:movement(...) abort
     let inner_seq = a:1 ==# 'Nop' ? '"_D:undojoin|norm! ".p'."\<cr>" : ('"'.v:register.a:1.'$')
     call feedkeys((arg3 ? arg3 : 1).inner_seq,'tn')
   endif
-  if a:1 ==? 'c'
+  if a:1 ==# 'c'
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
   else
     if a:1 ==# 'Nop'
