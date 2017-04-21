@@ -47,23 +47,28 @@ function! s:movement(...) abort
   else
     let [lclose, cclose] = s:fairEdit(s:arg2)
   endif
-  call search('^\s*\zs\S','cW',line('.'))
+  if a:1 == 'c'
+    call search('^\s*\zs\S','cW',line('.'))
+  endif
   if lclose
-    let inner_seq = a:1 ==# 'Nop' ? '"_d".P' : ('"'.v:register.a:1)
+    let inner_seq = a:1 ==# 'Nop' ? '"_d:undojoin|norm! ".P'."\<cr>" : ('"'.v:register.a:1)
     call setpos("'[", [0, line('.'), col('.'), 0])
     call setpos("']", [0, lclose, cclose, 0])
     call feedkeys('v`[o`]'.inner_seq,'tn')
   else
-    let inner_seq = a:1 ==# 'Nop' ? '"_D".p' : ('"'.v:register.a:1.'$')
+    let inner_seq = a:1 ==# 'Nop' ? '"_D:undojoin|norm! ".p'."\<cr>" : ('"'.v:register.a:1.'$')
     call feedkeys((arg3 ? arg3 : 1).inner_seq,'tn')
   endif
   if a:1 == 'c'
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
   else
+    call feedkeys("\<PLUG>Fair_clearhist","mt")
     call feedkeys('','x')
     silent! call repeat#set(key_seq,arg3)
   endif
 endfunction
+
+nnoremap <silent><PLUG>Fair_clearhist :call histdel(":",-1)<cr>
 
 nnoremap <silent><PLUG>Fair_M_Nop :<C-U>call <SID>movement('Nop',0,1,v:count)<CR>
 nnoremap <silent><PLUG>Fair_Nop :<C-U>call <SID>movement('Nop',0,0,v:count)<CR>
