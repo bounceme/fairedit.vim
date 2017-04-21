@@ -64,14 +64,14 @@ function! s:movement(...) abort
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
   else
     if a:1 ==# 'Nop'
-      call feedkeys("\<PLUG>Fair_clearhist","mt")
+      call feedkeys("\<PLUG>Fair_clearhist",'mt')
     endif
     call feedkeys('','x')
     silent! call repeat#set(key_seq,arg3)
   endif
 endfunction
 
-nnoremap <silent><PLUG>Fair_clearhist :call histdel(":",-1)<cr>
+nnoremap <silent><PLUG>Fair_clearhist :call histdel(':',-1)<cr>
 
 nnoremap <silent><PLUG>Fair_M_Nop :<C-U>call <SID>movement('Nop',0,1,v:count)<CR>
 nnoremap <silent><PLUG>Fair_Nop :<C-U>call <SID>movement('Nop',0,0,v:count)<CR>
