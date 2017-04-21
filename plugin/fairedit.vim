@@ -47,7 +47,7 @@ function! s:movement(...) abort
   else
     let [lclose, cclose] = s:fairEdit(s:arg2)
   endif
-  if a:1 == 'c'
+  if a:1 ==? 'c'
     call search('^\s*\zs\S','cW',line('.'))
   endif
   if lclose
@@ -59,10 +59,12 @@ function! s:movement(...) abort
     let inner_seq = a:1 ==# 'Nop' ? '"_D:undojoin|norm! ".p'."\<cr>" : ('"'.v:register.a:1.'$')
     call feedkeys((arg3 ? arg3 : 1).inner_seq,'tn')
   endif
-  if a:1 == 'c'
+  if a:1 ==? 'c'
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
   else
-    call feedkeys("\<PLUG>Fair_clearhist","mt")
+    if a:1 ==# 'Nop'
+      call feedkeys("\<PLUG>Fair_clearhist","mt")
+    endif
     call feedkeys('','x')
     silent! call repeat#set(key_seq,arg3)
   endif
