@@ -13,6 +13,7 @@ omap $ <Plug>Fair_dollar
 nmap C <Plug>Fair_C
 nmap D <Plug>Fair_D
 if maparg('Y','n') ==# 'y$'
+  nunmap Y
   nmap Y <Plug>Fair_yEOL
 endif
 
@@ -23,6 +24,7 @@ omap $ <Plug>Fair_M_dollar
 nmap C <Plug>Fair_M_C
 nmap D <Plug>Fair_M_D
 if maparg('Y','n') ==# 'y$'
+  nunmap Y
   nmap Y <Plug>Fair_M_yEOL
 endif
 ```
