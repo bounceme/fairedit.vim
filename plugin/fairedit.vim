@@ -40,7 +40,7 @@ endfunction
 
 function! s:movement(...) abort
   let [arg1, s:arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
-  let key_seq = (arg1 ? a:1 : '')."\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
+  let key_seq = (arg1 ? substitute(a:1,'g@','','') : '')."\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
         \ .(arg1 ? 'dollar' : substitute(substitute(a:1,'y','&EOL',''),'^.$','\U&',''))
   if arg3 > 1
     let lclose = 0
@@ -55,10 +55,10 @@ function! s:movement(...) abort
     let inner_seq = a:1 ==# 'Nop' ? '"_d".P' : ('"'.v:register.a:1)
     call setpos("'[", [0, line('.'), col('.'), 0])
     call setpos("']", [0, lclose, cclose, 0])
-    call feedkeys('v`[o`]'.inner_seq,'n')
+    call feedkeys('v`[o`]'.(a:1 ==# 'g@' ? '' : inner_seq),'in')
   else
-    let inner_seq = a:1 ==# 'Nop' ? '"_D".p' : ('"'.v:register.a:1.'$')
-    call feedkeys((arg3 ? arg3 : 1).inner_seq,'n')
+    let inner_seq = a:1 ==# 'Nop' ? '"_D".p' : a:1 ==# 'g@' ? 'v$h' : ('"'.v:register.a:1.'$')
+    call feedkeys((arg3 ? arg3 : 1).inner_seq,'in')
   endif
   if a:1 ==# 'c'
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
@@ -74,9 +74,11 @@ nnoremap <silent><PLUG>Fair_Nop :<C-U>call <SID>movement('Nop',0,0,v:count)<CR>
 nnoremap <silent><PLUG>Fair_D :<C-U>call <SID>movement('d',0,0,v:count)<CR>
 nnoremap <silent><PLUG>Fair_C :<C-U>call <SID>movement('c',0,0,v:count)<CR>
 nnoremap <silent><PLUG>Fair_yEOL :<C-U>call <SID>movement('y',0,0,v:count)<CR>
-onoremap <silent><PLUG>Fair_dollar <esc>:<C-U>call <SID>movement(v:operator,1,0,v:prevcount)<CR>
+onoremap <expr><silent><PLUG>Fair_dollar (v:operator ==# 'g@' ? '' : "\<esc>")
+      \ .":\<C-U>call \<SID>movement(v:operator,1,0,v:prevcount)\<CR>"
 
 nnoremap <silent><PLUG>Fair_M_D :<C-U>call <SID>movement('d',0,1,v:count)<CR>
 nnoremap <silent><PLUG>Fair_M_C :<C-U>call <SID>movement('c',0,1,v:count)<CR>
 nnoremap <silent><PLUG>Fair_M_yEOL :<C-U>call <SID>movement('y',0,1,v:count)<CR>
-onoremap <silent><PLUG>Fair_M_dollar <esc>:<C-U>call <SID>movement(v:operator,1,1,v:prevcount)<CR>
+onoremap <expr><silent><PLUG>Fair_M_dollar (v:operator ==# 'g@' ? '' : "\<esc>")
+      \ .":\<C-U>call \<SID>movement(v:operator,1,1,v:prevcount)\<CR>"
