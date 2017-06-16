@@ -49,7 +49,7 @@ function! s:movement(...) abort
   endif
   if a:1 =~# '^\%(c\|Nop\)$' &&
         \ synIDattr(synID(line('.'), 1, 1), 'name') !~? '\vstring|comment|regex'
-    call search('^\s*\zs\S','cW',line('.'))
+    call search('\m^\s*\zs\S','cW',line('.'))
   endif
   if lclose
     let inner_seq = a:1 ==# 'Nop' ? '"_d".P' : ('"'.v:register.a:1)
