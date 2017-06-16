@@ -57,8 +57,8 @@ function! s:movement(...) abort
     call setpos("']", [0, lclose, cclose, 0])
     call feedkeys('v`[o`]'.(a:1 ==# 'g@' ? '' : inner_seq),'in')
   else
-    let inner_seq = a:1 ==# 'Nop' ? '"_D".p' : ('"'.v:register.a:1.'$')
-    call feedkeys((arg3 ? arg3 : 1).inner_seq,'n')
+    let inner_seq = a:1 ==# 'Nop' ? '"_D".p' : a:1 ==# 'g@' ? 'v$h' : ('"'.v:register.a:1.'$')
+    call feedkeys((arg3 ? arg3 : 1).inner_seq,'in')
   endif
   if a:1 ==# 'c'
     au FaEd insertleave * silent! call repeat#set("\<PLUG>Fair_".(s:arg2 ? 'M_' : '').'Nop') | au! FaEd *
