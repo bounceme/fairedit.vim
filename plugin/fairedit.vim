@@ -40,7 +40,7 @@ endfunction
 
 function! s:movement(...) abort
   let [arg1, s:arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
-  let key_seq = (arg1 ? substitute(a:1,'g@','','') : '')."\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
+  let key_seq = (arg1 && a:1 !=# 'g@' ? a:1 : '')."\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
         \ .(arg1 ? 'dollar' : substitute(substitute(a:1,'y','&EOL',''),'^.$','\U&',''))
   if arg3 > 1
     let lclose = 0
