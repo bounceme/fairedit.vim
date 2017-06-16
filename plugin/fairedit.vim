@@ -39,10 +39,6 @@ function! s:fairEdit(...)
 endfunction
 
 function! s:movement(...) abort
-  let si = exists('b:surround_indent')
-  if si
-    let [si, b:surround_indent] = [b:surround_indent, 0]
-  endif
   let [arg1, s:arg2, arg3] = [get(a:000,1),get(a:000,2),get(a:000,3)]
   let key_seq = (arg1 ? substitute(a:1,'g@','','') : '')."\<PLUG>Fair_".(s:arg2 ? 'M_' : '')
         \ .(arg1 ? 'dollar' : substitute(substitute(a:1,'y','&EOL',''),'^.$','\U&',''))
@@ -69,9 +65,6 @@ function! s:movement(...) abort
   else
     call feedkeys('','x')
     silent! call repeat#set(key_seq,arg3)
-  endif
-  if si
-    let b:surround_indent = si
   endif
 endfunction
 
